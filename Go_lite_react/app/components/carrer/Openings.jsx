@@ -1,4 +1,3 @@
-
 const jobs = [
   {
     title: "Sales & Marketing",

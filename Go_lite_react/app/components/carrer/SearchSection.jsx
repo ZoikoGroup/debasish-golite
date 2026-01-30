@@ -1,11 +1,7 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import jobsData from "../../Sdata/jobsData";
-
-
-
+import { fetchJobs } from "../../Sdata/fetchJobs";
 export default function SearchSection() {
   const router = useRouter();
 
@@ -14,32 +10,32 @@ export default function SearchSection() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // live search based on location 
+  //  LIVE FETCH FROM DJANGO BACKEND
   useEffect(() => {
-    setLoading(true);
+    const delay = setTimeout(async () => {
+      try {
+        setLoading(true);
 
-    const delay = setTimeout(() => {
-      const filteredJobs = jobsData.filter((job) => {
-        // filtering of the location
-        if (!location) return true; 
-        return job.location.toLowerCase() === location.toLowerCase();
-      });
+        // call backend with filters
+        const data = await fetchJobs({ query, location });
 
-      setResults(filteredJobs);
-      setLoading(false);
-    }, 300);
+        setResults(data);
+      } catch (err) {
+        console.error("Job fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
+    }, 400);
 
     return () => clearTimeout(delay);
-  }, [location]);
+  }, [query, location]);
 
-  //  SEARCH BUTTON 
+  // 🔍 SEARCH BUTTON → REDIRECT PAGE
   function handleSearch() {
     const params = new URLSearchParams();
-
     if (query.trim()) params.append("q", query.trim());
     if (location) params.append("location", location);
-
-    router.push(`/jobs?${params.toString()}`);
+router.push(`/jobs?${params.toString()}`);
   }
 
   return (
@@ -48,7 +44,6 @@ export default function SearchSection() {
         Check out our Open Positions to see where you fit in
       </h2>
 
-      {/* SEARCH CONTROLS */}
       <div className="max-w-4xl mx-auto flex flex-col sm:flex-row gap-4">
         <input
           type="text"
@@ -79,7 +74,7 @@ export default function SearchSection() {
         </button>
       </div>
 
-      {/* LIVE RESULTS */}
+      {/* RESULTS UI SAME */}
       <div className="max-w-4xl mx-auto mt-12">
         {loading && (
           <p className="text-center text-gray-500">Loading...</p>
@@ -87,7 +82,7 @@ export default function SearchSection() {
 
         {!loading && results.length === 0 && (
           <p className="text-center text-gray-500">
-            No jobs found for this location
+            No jobs found.
           </p>
         )}
 
@@ -105,13 +100,12 @@ export default function SearchSection() {
                 {job.location}
               </p>
 
-              {/*  SHORT DESCRIPTION */}
               <p className="text-sm text-gray-700 mt-3">
                 {job.shortDescription}
               </p>
 
               <div className="flex flex-wrap gap-2 mt-3">
-                {job.technologies.map((tech, index) => (
+                {job.technologies?.map((tech, index) => (
                   <span
                     key={index}
                     className="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded"
