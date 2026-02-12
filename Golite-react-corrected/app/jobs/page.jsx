@@ -1,10 +1,13 @@
 "use client";
+import { useRouter } from "next/navigation";
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchJobs } from "../Sdata/fetchJobs";
 export default function JobsPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+
 
   const query = searchParams.get("q") || "";
   const location = searchParams.get("location") || "";
@@ -93,10 +96,13 @@ export default function JobsPage() {
                 </span>
               ))}
             </div>
+<button
+ onClick={() => router.push(`/applynow?jobId=${job.id}`)}
 
-            <button className="mt-5 w-full py-2 border border-orange-400 text-orange-500 rounded-lg hover:bg-orange-50">
-              Apply Now
-            </button>
+  className="mt-5 w-full py-2 border border-orange-400 text-orange-500 rounded-lg hover:bg-orange-50"
+>
+  Apply Now
+</button>
           </li>
         ))}
       </ul>

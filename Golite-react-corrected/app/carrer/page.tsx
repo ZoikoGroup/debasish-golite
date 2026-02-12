@@ -1,5 +1,5 @@
 
-
+import "../globals.css";
 import Openings from "../components/carrer/Openings";
 import SearchSection from "../components/carrer/SearchSection";
 import Header from "../components/Header";
