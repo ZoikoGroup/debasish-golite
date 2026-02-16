@@ -2,14 +2,14 @@
 import "../globals.css";
 import Openings from "../components/carrer/Openings";
 import SearchSection from "../components/carrer/SearchSection";
-import Header from "../components/Header";
+
 
 export default function App() {
   return (
     <div className="bg-[#fff7f3] min-h-screen">
      
 
- <Header/>
+
 
  {/* this is the why work page has been intergrated here to reduce the load of the website so rather than defining the entire things using components   */}
    
