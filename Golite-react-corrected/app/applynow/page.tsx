@@ -26,14 +26,14 @@ export default function ApplyNow() {
     formData.append("full_name", fullName);
     formData.append("email", email);
     formData.append("phone", phone);
-    formData.append("position", position);
+ formData.append("position_applied", position);
 
     if (resume) {
       formData.append("resume", resume);
     }
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/admin/careers/jobapplication/", {
+      const res = await fetch("http://127.0.0.1:8000/api/apply_job/", {
         method: "POST",
         body: formData,
       });
